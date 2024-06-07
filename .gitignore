@@ -1,0 +1,4 @@
+__pycache__
+.mypy_cache
+backend/app/files
+.venv
