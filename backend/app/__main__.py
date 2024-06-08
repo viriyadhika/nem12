@@ -1,6 +1,7 @@
 import csv
 
 from app.parser import RowParser
+from .db.generate_sql import generate_meter_reading_sql
 
 
 if __name__ == "__main__":
@@ -10,4 +11,5 @@ if __name__ == "__main__":
         for row in file_reader:
             parser.parse_row(row)
 
-        print(parser.get_result())
+        query = generate_meter_reading_sql(parser.get_result())
+        print("\n".join(query))
