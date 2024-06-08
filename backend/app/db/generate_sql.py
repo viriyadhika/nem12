@@ -25,7 +25,7 @@ def generate_meter_reading_sql(records: List[Record200]) -> List[str]:
             for interval_record in record_300.interval_records:
                 new_reading = MeterReading(
                     nmi=record.nmi,
-                    timestamp=interval_record.timestamp,
+                    timestamp=interval_record.date.strftime("%Y-%m-%d %H:%M"),
                     consumption=interval_record.value,
                 )
                 result.append(convert_meter_reading_to_insert_sql(new_reading))

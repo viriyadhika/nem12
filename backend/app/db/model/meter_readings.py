@@ -12,5 +12,5 @@ class MeterReadingField:
 @dataclass
 class MeterReading:
     nmi: str
-    timestamp: int
+    timestamp: str
     consumption: float

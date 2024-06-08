@@ -1,16 +1,17 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import List
 
 
 @dataclass
 class IntervalRecord:
-    timestamp: int
+    date: datetime
     value: float
 
 
 @dataclass
 class Record300:
-    start_timestamp: int
+    date: datetime
     interval_records: List[IntervalRecord]
 
 
