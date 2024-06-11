@@ -47,13 +47,22 @@ class RowParser:
             )
         last_record.record_300.append(new_record_300)
 
+    def _get_record_indicator(self, row: List[str]):
+        return int(row[0])
+
     def parse_row(self, row: List[str]):
-        record_indicator = int(row[0])
+        record_indicator = self._get_record_indicator(row)
 
         if record_indicator == 200:
             self._parse_200(row)
         if record_indicator == 300:
             self._parse_300(row)
 
+    def is_200(self, row: List[str]) -> bool:
+        return self._get_record_indicator(row) == 200
+
     def get_result(self) -> List[Record200]:
         return self.records
+
+    def clear_result(self):
+        self.records = []
