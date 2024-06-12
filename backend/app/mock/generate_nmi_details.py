@@ -3,14 +3,14 @@ from typing import List
 from app.utils import logger
 
 
-def wipe():
+def wipe(file_name: str):
     ## Wipe the file
-    with open("app/files/out.csv", "w"):
+    with open(file_name, "w"):
         pass
 
 
-def write_to_file(rows: List[str]):
-    with open("app/files/out.csv", "a") as file:
+def write_to_file(rows: List[str], file_name: str):
+    with open(file_name, "a") as file:
         for row in rows:
             file.write(row)
             file.write("\n")
@@ -24,11 +24,11 @@ def get_300_row(cur_date: int):
     return ",".join(row_300)
 
 
-def generate_nmi_details(num_records):
+def generate_nmi_details(num_records: int, file_name: str):
     rows = []
     num = 0
 
-    wipe()
+    wipe(file_name)
 
     for _ in range(num_records):
         padded_num = str(num).zfill(7)
@@ -42,11 +42,11 @@ def generate_nmi_details(num_records):
 
         # Empty the memory
         if len(rows) > 10000:
-            write_to_file(rows)
+            write_to_file(rows, file_name)
             logger.info(f"{len(rows)} rows generated")
             rows = []
 
         num += 1
 
-    write_to_file(rows)
+    write_to_file(rows, file_name)
     logger.info(f"{len(rows)} rows generated")

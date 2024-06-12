@@ -1,6 +1,7 @@
 import csv
 from typing import List
 
+from app.db import execute_sql
 from app.mock.generate_nmi_details import generate_nmi_details
 from app.models import Record200
 from app.parser import RowParser
@@ -47,5 +48,8 @@ def get_sql_from_nim12():
 
 
 if __name__ == "__main__":
-    get_sql_from_nim12()
+    with open("app/files/res.txt") as file:
+        f = file.read()
+        execute_sql.run(f.split("\n"))
+    # get_sql_from_nim12()
     # generate_nmi_details(5000)
