@@ -1,6 +1,10 @@
 from typing import List
-from app.models import Record200
-from .model.meter_readings import MeterReading, MeterReadingField, meter_reading_table
+from ..models import Record200
+from ...db.model.meter_readings import (
+    MeterReading,
+    MeterReadingField,
+    meter_reading_table,
+)
 from pypika import Table, PostgreSQLQuery
 
 
