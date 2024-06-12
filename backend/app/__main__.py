@@ -5,6 +5,7 @@ from app.mock.generate_nmi_details import generate_nmi_details
 from app.models import Record200
 from app.parser import RowParser
 from .db.generate_sql import generate_meter_reading_sql
+from app.utils import logger
 
 
 def generate_and_write_result(record_200: List[Record200]):
@@ -34,7 +35,7 @@ def get_sql_from_nim12():
             # Process exisitng data first before parsing this row
             if parser.is_200(row) and (row_count / batch_size - batch_count) > 0:
                 generate_and_write_result(parser.get_result())
-                print(f"{row_count} rows processed", flush=True)
+                logger.info(f"{row_count} rows processed")
                 parser.clear_result()
                 batch_count += 1
 

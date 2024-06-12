@@ -1,5 +1,6 @@
 from random import random
 from typing import List
+from app.utils import logger
 
 
 def wipe():
@@ -29,7 +30,7 @@ def generate_nmi_details(num_records):
 
     wipe()
 
-    for i in range(num_records):
+    for _ in range(num_records):
         padded_num = str(num).zfill(7)
         row_200 = f"200,NEM{padded_num},E1E2,2,E2,,01009,kWh,30,20050610"
         rows.append(row_200)
@@ -42,10 +43,10 @@ def generate_nmi_details(num_records):
         # Empty the memory
         if len(rows) > 10000:
             write_to_file(rows)
+            logger.info(f"{len(rows)} rows generated")
             rows = []
-            print(f"|", end="", flush=True)
 
         num += 1
 
-    print()
     write_to_file(rows)
+    logger.info(f"{len(rows)} rows generated")
