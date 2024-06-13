@@ -12,6 +12,7 @@ export type UploadFileProps = {
 
 export default function UploadFile({ onUploaded }: UploadFileProps) {
   const [file, setFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <form
       method="POST"
@@ -21,6 +22,7 @@ export default function UploadFile({ onUploaded }: UploadFileProps) {
         if (file) {
           const formData = new FormData();
           formData.append("file", file);
+          setIsLoading(true);
           try {
             const res = await axios.post<UploadResult>(
               "http://localhost:5000/upload",
@@ -29,6 +31,8 @@ export default function UploadFile({ onUploaded }: UploadFileProps) {
             onUploaded(res.data.task_id);
           } catch (e) {
             console.error(e);
+          } finally {
+            setIsLoading(false);
           }
         }
       }}
@@ -54,6 +58,7 @@ export default function UploadFile({ onUploaded }: UploadFileProps) {
         <div className="row w-50">
           <input type="submit" className="btn btn-success" value="Upload" />
         </div>
+        {isLoading && <div className="spinner-border" role="status"></div>}
       </Section>
     </form>
   );
