@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+  postgresql:
+    container_name: postgresql
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=somepassword
+      - POSTGRES_USER=someuser
+      - POSTGRES_DB=meter_readings
+      - POSTGRES_HOST=postgresql
+      - POSTGRES_PORT=5432
+      - SECRET_KEY=KSADFJasldkfj343zsdj
+    ports:
+      - "5432:5432"
+    networks:
+      - meter_readings
+
+
+  meter_readings_backend:
+    container_name: meter_readings_backend
+    build:
+      dockerfile: ./backend/Dockerfile
+    depends_on:
+      - postgresql
+    environment:
+      - POSTGRES_PASSWORD=somepassword
+      - POSTGRES_USER=someuser
+      - POSTGRES_DB=meter_readings
+      - POSTGRES_HOST=postgresql
+      - POSTGRES_PORT=5432
+      - SECRET_KEY=KSADFJasldkfj343zsdj
+    ports:
+      - "5000:5000"
+    networks:
+      - meter_readings
+
+  meter_readings_frontend:
+    container_name: meter_readings_frontend
+    build:
+      dockerfile: ./frontend_meter_readings/Dockerfile
+    ports:
+      - "8080:8080"
+
+
+networks:
+  meter_readings:

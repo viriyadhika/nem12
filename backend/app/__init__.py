@@ -1,9 +1,8 @@
 from flask import Flask, request, send_from_directory
 
-import os
-
 from app.sql_generator import get_sql_from_nim12, generate_nmi_details
 from app.db import execute_sql
+from .initialize import run
 
 from app.utils.files import (
     get_generated_mock_file_name,
@@ -20,8 +19,7 @@ app = Flask(__name__)
 CORS(app)
 app.config.from_mapping(SECRET_KEY=SECRET_KEY)
 
-if not os.path.exists(get_upload_path("")):
-    os.mkdir(get_upload_path(""))
+run()
 
 
 @app.route("/generate-file", methods=["POST"])

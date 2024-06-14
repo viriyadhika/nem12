@@ -1,23 +1,7 @@
 from typing import List
-import psycopg2
-from app.utils.env import (
-    POSTGRES_DB,
-    POSTGRES_HOST,
-    POSTGRES_PASSWORD,
-    POSTGRES_USER,
-    POSTGRES_PORT,
-)
+
 from app.utils import logger
-
-
-def get_connection():
-    return psycopg2.connect(
-        host=POSTGRES_HOST,
-        database=POSTGRES_DB,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD,
-        port=POSTGRES_PORT,
-    )
+from . import get_connection
 
 
 def run(sqls: List[str]):
