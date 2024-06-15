@@ -8,6 +8,8 @@ def run(sqls: List[str]):
     connection = get_connection()
     cursor = connection.cursor()
     for sql in sqls:
+        if not sql:
+            continue
         try:
             cursor.execute(sql)
             connection.commit()
