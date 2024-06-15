@@ -17,6 +17,8 @@ The web app has 4 capabilities:
 
 Input file is expected to follow NEM12 specification. Invalid file is not handled and will throw error.
 
+When there is a duplicate NMI, it will ignore the duplicated record and log a warning and proceed with the rest . This is why instead of generating one insert statement with all the values, one insert statement is generated for each DB row.
+
 ### Security
 
 1. Generating SQL comes with risk of SQL injection if it's not carefully designed. For this case I'm using [PyPika](https://github.com/kayak/pypika). However due to the processing load that comes with sanitizing, this library is significantly slower than generating string. So, for demo purposes I enable an option to turn off sanitizing.
@@ -73,7 +75,24 @@ There are a few choke points that we can identify and improve on from here to cr
 - DB integration
 - File / storage utils.
 
-  Each of them are independent component that can be swapped without affecting other components. For example, changing storage utils to S3 will require change in File / storage utils and probably a part of Flask Webserver without affecting any other places. Changing DB from postgres to MySQL will only affect the DB integration and maybe a minor part of SQL generator so that it's compatible with MySQL but it will not affect the CSV parsing part.
+  SQL Generator is further subdivided into
+- Generate SQL
+- Parser
+- Mock
+
+  The code flow is as follows.
+- Trigger Flask server
+- File storage utils is invoked to store user input
+- SQL Generator is triggered
+- Inside SQL Generator, Parser submodule parse into a dataclass
+- Generate SQL submodule then will transform the dataclass into SQL query
+- The SQL will be written into a file in batches to limit memory peak usage
+- Upon request the result file can be sent back through Flask webserver back to Frontend
+
+  Each of them are independent component that can be swapped without affecting other components. For example,
+- Changing storage utils to S3 will require change in File / storage utils and probably a part of Flask Webserver without affecting any other places.
+- Changing DB from postgres to MySQL will only affect the DB integration and maybe a minor part of SQL generator so that it's compatible with MySQL but it will not affect the CSV parsing part.
+- If the format of NEM12 change, only parser module need to be changed. If there is another file format that needs to be transformed into consumption SQL, we can create multiple parser to create the same dataclass. Generate SQL submodule will not have to change.
 
 4. How does the design help to make the codebase readable and maintainable for other engineers?
 
