@@ -28,6 +28,19 @@ Input file is expected to follow NEM12 specification. Invalid file is not handle
 
 As per the problem statement, this software can handle CSV file up to 1 GB. It is expected that the insert statement generated will be larger than 1GB. To avoid storing all the results in the memory resulting in Out Of Memory, the CSV file is processed in batches, with output incrementally written to the disk for each processed chunk.
 
+### Basic testing
+
+1. Go to backend folder
+   `cd backend`
+2. Create venv
+   `python3 -m venv .venv`
+3. Activate python venv
+   `source .venv/bin/activate`
+4. Install the package
+   `pip install -r requirements.txt`
+5. Run Pytest
+   `pytest`
+
 ### Making the service production grade
 
 There are a few choke points that we can identify and improve on from here to create a production grade software
@@ -36,6 +49,7 @@ There are a few choke points that we can identify and improve on from here to cr
 2. To prevent files from getting bigger and bigger, have a mechanism to periodically clear the object store. This can be based on the SLA with the users (for example the generated file will be available for one day)
 3. sql_generator service scaling: As the SQL generator can take quite some time as the file size is getting bigger. We can create a queue to store all sql_generator job. sql_generator worker can take the job from the queue and asynchronously perform the task and update a status in a cache. User can check the task status by polling to determine when the file is ready for download. In order to do this, it might be also a good idea to separate the services into multiple containers instead of putting them inside one docker container as the current setup.
 4. Currently the logs are sent to stdout because we doesn't have logging service. In production scenario, we can push it to Elastic Search and view it through Kibana for monitoring.
+5. Add a more comprehensive unit test
 
 ### Answer to the questions
 
